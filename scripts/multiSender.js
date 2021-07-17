@@ -21,17 +21,19 @@ async function main() {
         "function symbol() view returns (string)",
         "function balanceOf(address) view returns(uint)",
         "function transfer(address to, uint amount)",
-        "function approve(address spender, uint amount) returns(bool)"
+        "function approve(address spender, uint amount) returns(bool)",
+        "function decimals() view returns (uint8)"
     ]
 
     const tokenContract = new ethers.Contract(tokenAddress, tokenAbi, owner);
+    const decimals = await tokenContract.decimals();
 
     //Get Initial Balances
     let i = 0;
     for (let account of accounts) {
         console.log(
             `Account ${i} Init Balance is: `, 
-            ethers.utils.formatUnits(await tokenContract.balanceOf(account.address),18),
+            ethers.utils.formatUnits(await tokenContract.balanceOf(account.address), decimals),
             await tokenContract.symbol()
         );
         i++;
@@ -42,7 +44,7 @@ async function main() {
     const amounts = [5,10,20];
     
     //Approve amounts
-    await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(),18));
+    await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(),decimals));
     //Execute Multi transfer
     await contract.multiSender(recipients, amounts, tokenAddress);
 
@@ -51,7 +53,7 @@ async function main() {
     for (let account of accounts) {
         console.log(
             `Account ${i} Final Balance is: `, 
-            ethers.utils.formatUnits(await tokenContract.balanceOf(account.address),18),
+            ethers.utils.formatUnits(await tokenContract.balanceOf(account.address),decimals),
             await tokenContract.symbol()
         );
         i++;
