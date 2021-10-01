@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
-
-import CodeMirror from '@uiw/react-codemirror';
-import 'codemirror/keymap/sublime';
-import 'codemirror/theme/monokai.css';
-import 'codemirror/mode/javascript/javascript';
+import Details from './components/details.js'
 
 import './App.css';
 
 function App() {
-    
-    const [arr, setArr] = useState([]);
-    const [erc20, setErc20] = useState('0x0000000000000000000000000000000000000000');
+    //Tx Status
+    const [txState, setTxState] = useState(0); 
 
-    function getContent(e) {
-        const maxLines = e.doc.lineCount();
-        setArr([]);
-
-        for(let i=0; i<maxLines; i++) {
-            let line = e.doc.getLine(i);
-            let [addr, amount] = line.split(',');
-            setArr(oldArr => [...oldArr, {address: String(addr), amount: amount}]);
+    function statusBar(state) {
+        const style = {
+            height: '10px',
+            width:'10px',
+            borderRadius: '90%',
+            border: 'solid 1px',
+            backgroundColor: 'white',
+            margin: '0 auto'
         }
+        if(txState == state) {
+            style.backgroundColor = 'blue';
+        }
+        return style;
+    };
+
+    function updateState() {
+        if(txState == 2) {
+            //Reset
+            setTxState(0);
+        } else {
+            setTxState(txState + 1);
+        }
+
     }
 
     return ( 
@@ -32,30 +41,22 @@ function App() {
                 Send any ERC20 token to multiple users now
             </p>
 
-            <p>ERC20 TOKEN ADDRESS TO SEND </p>
-            <input 
-            onChange={ e => setErc20(e.target.value) }
-            value={erc20} 
-            type='text' 
-            name="ERC20" 
-            size='50' 
-            />
-            <br/>
-            
-            <p style={{marginTop: '20px'}}>Add Recipients Addresses and amount of money to send</p>
-            <div style={{width: '50%', height: '200px'}}>
-                <CodeMirror
-                      value= '0x6308F1c6f283583C8bf8E31Da793B87718b051eD, 10'
-                      onChange= {(e) => {getContent(e)}}
-                      style={{width:'50% !important'}}
-                      options={{
-                        theme: 'monokai',
-                        keyMap: 'sublime',
-                        lineNumbers: true,
-                        mode: 'javascript',
-                      }}
-                />
+            <div style={{display:'flex'}}>
+                <div className='statusBar' style={{padding:'10px'}}>
+                    <div style={statusBar(0)}></div>
+                    <p>Details</p>
+                </div>
+                <div className='statusBar' style={{padding:'10px'}}>
+                    <div style={statusBar(1)}></div>
+                    <p>Approve</p>
+                </div>
+                <div className='statusBar' style={{padding:'10px'}}>
+                    <div style={statusBar(2)}></div>
+                    <p>Send</p>
+                </div>
             </div>
+            {txState === 0 && <Details/>}
+            <button onClick={updateState}>Continue</button>
         </header>
 
     </div>
