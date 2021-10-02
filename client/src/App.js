@@ -23,6 +23,7 @@ function App() {
     ];
 
     const [erc20, setErc20] = useState('0x0000000000000000000000000000000000000000');
+    const [recipients, setRecipients] = useState([]);
 
     //Tx Status
     const [txState, setTxState] = useState(0); 
@@ -76,7 +77,12 @@ function App() {
                     <p>Send</p>
                 </div>
             </div>
-            {txState === 0 && <Details tokenAddress={erc20} setTokenAddress={erc20 => setErc20(erc20)}/>}
+            {txState === 0 && 
+            <Details 
+                tokenAddress={erc20} 
+                setTokenAddress={erc20 => setErc20(erc20)}
+                setRecievers={recipients => setRecipients(recipients)}
+            />}
             <button onClick={updateState}>Continue</button>
         </header>
 

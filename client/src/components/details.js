@@ -7,17 +7,15 @@ import 'codemirror/mode/javascript/javascript';
 
 function Details(props) {
 
-    const [arr, setArr] = useState([]);
-
     function getContent(e) {
         const maxLines = e.doc.lineCount();
-        setArr([]);
+        props.setRecievers([]);
         
         // Convert to json
         for(let i=0; i<maxLines; i++) {
             let line = e.doc.getLine(i);
             let [addr, amount] = line.split(',');
-            setArr(oldArr => [...oldArr, {address: String(addr), amount: amount}]);
+            props.setRecievers(oldArr => [...oldArr, {address: String(addr), amount: amount}]);
         }
     }
 
