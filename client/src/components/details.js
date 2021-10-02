@@ -5,10 +5,9 @@ import 'codemirror/keymap/sublime';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/javascript/javascript';
 
-function Details() {
+function Details(props) {
 
     const [arr, setArr] = useState([]);
-    const [erc20, setErc20] = useState('0x0000000000000000000000000000000000000000');
 
     function getContent(e) {
         const maxLines = e.doc.lineCount();
@@ -26,8 +25,8 @@ function Details() {
         <div>
             <p>ERC20 TOKEN ADDRESS TO SEND </p>
             <input 
-            onChange={ e => setErc20(e.target.value) }
-            value={erc20} 
+            onChange={ e => props.setTokenAddress(e.target.value) }
+            value={props.tokenAddress} 
             type='text' 
             name="ERC20" 
             size='50' 

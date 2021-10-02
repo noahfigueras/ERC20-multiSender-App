@@ -1,9 +1,29 @@
 import React, { useState } from 'react';
+import {ethers} from 'ethers';
+
 import Details from './components/details.js'
 
 import './App.css';
 
 function App() {
+    //Ethers
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    //Get Token Contract
+    let tokenContract;
+    let tokenDecimals;
+    const tokenAbi = [
+        "function name() view returns (string)",
+        "function symbol() view returns (string)",
+        "function balanceOf(address) view returns(uint)",
+        "function transfer(address to, uint amount)",
+        "function approve(address spender, uint amount) returns(bool)",
+        "function decimals() view returns (uint8)"
+    ];
+
+    const [erc20, setErc20] = useState('0x0000000000000000000000000000000000000000');
+
     //Tx Status
     const [txState, setTxState] = useState(0); 
 
@@ -16,20 +36,21 @@ function App() {
             backgroundColor: 'white',
             margin: '0 auto'
         }
-        if(txState == state) {
+        if(txState === state) {
             style.backgroundColor = 'blue';
         }
         return style;
     };
 
-    function updateState() {
-        if(txState == 2) {
+    async function updateState() {
+        if(txState === 2) {
             //Reset
             setTxState(0);
-        } else {
+        } else if(txState === 0){
             setTxState(txState + 1);
+            tokenContract = new ethers.Contract(erc20,tokenAbi,signer);
+            tokenDecimals = await tokenContract.decimals();
         }
-
     }
 
     return ( 
@@ -55,7 +76,7 @@ function App() {
                     <p>Send</p>
                 </div>
             </div>
-            {txState === 0 && <Details/>}
+            {txState === 0 && <Details tokenAddress={erc20} setTokenAddress={erc20 => setErc20(erc20)}/>}
             <button onClick={updateState}>Continue</button>
         </header>
 
