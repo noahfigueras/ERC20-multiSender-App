@@ -1,5 +1,3 @@
-import React, { useState } from 'react';
-
 import CodeMirror from '@uiw/react-codemirror';
 import 'codemirror/keymap/sublime';
 import 'codemirror/theme/monokai.css';
