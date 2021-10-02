@@ -82,16 +82,23 @@ function App() {
 
     async function updateState() {
         if(txState === 2) {
-            //Reset
+            //Send Tokens and reset
+            const addrs = recipients.map(x => x.address);
+            const Amounts = recipients.map(x => Number(x.amount));
+            const tx2 = await Contract.multiSender(addrs, Amounts, erc20);
+            await tx2.wait();
             setTxState(0);
+            alert('Transaction Send Successfully');
         } else if(txState === 0){
-            setTxState(txState + 1);
+            setTxState(1);
             tokenContract = new ethers.Contract(erc20,tokenAbi,signer);
             tokenDecimals = await tokenContract.decimals();
             //Approve amounts
             const amounts = recipients.map(x => Number(x.amount));
-            console.log(amounts);
-            await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(), tokenDecimals));
+            const tx1 = await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(), tokenDecimals));
+            await tx1.wait();
+            setTxState(2);
+            console.log('Transaction approved');
         }
     }
 
@@ -119,15 +126,26 @@ function App() {
                 </div>
             </div>
             {txState === 0 && 
+            <div>
             <Details 
                 tokenAddress={erc20} 
                 setTokenAddress={erc20 => setErc20(erc20)}
                 setRecievers={recipients => setRecipients(recipients)}
-            />}
+        />
+                <button onClick={updateState}>Approve</button>
+            </div>
+            }
+
             {txState === 1 &&
             <p>Transaction is being approved...</p>
             }
-            <button onClick={updateState}>Continue</button>
+
+            {txState === 2 && 
+                <div>
+                    <p>Send Transaction</p>
+                    <button onClick={updateState}>Send</button>
+                </div>
+            }
         </header>
 
     </div>
