@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {ethers} from 'ethers';
+import contract from './abi/MultiSender.js';
 import Details from './components/details';
 
 import './App.css';
@@ -8,42 +9,6 @@ function App() {
     //Ethers
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-
-    //Multi Sender Contract
-    const contract = {
-        address: '0xc5d956F4Bd1dC5D5975022542665F7Aa255040AF',
-        abi: [
-                {
-          "inputs": [],
-          "stateMutability": "nonpayable",
-          "type": "constructor"
-        },
-        {
-          "inputs": [
-            {
-              "internalType": "address payable[]",
-              "name": "addrs",
-              "type": "address[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "amounts",
-              "type": "uint256[]"
-            },
-            {
-              "internalType": "address",
-              "name": "_token",
-              "type": "address"
-            }
-          ],
-          "name": "multiSender",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }
-
-        ]
-    }
 
     const Contract = new ethers.Contract(contract.address, contract.abi, signer);
 
