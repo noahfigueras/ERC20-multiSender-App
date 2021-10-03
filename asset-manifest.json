@@ -11,8 +11,8 @@
     "static/js/4.31037e52.chunk.js": "/ERC20-multiSender-App/static/js/4.31037e52.chunk.js",
     "static/js/4.31037e52.chunk.js.map": "/ERC20-multiSender-App/static/js/4.31037e52.chunk.js.map",
     "main.css": "/ERC20-multiSender-App/static/css/main.a617e044.chunk.css",
-    "main.js": "/ERC20-multiSender-App/static/js/main.41a62087.chunk.js",
-    "main.js.map": "/ERC20-multiSender-App/static/js/main.41a62087.chunk.js.map",
+    "main.js": "/ERC20-multiSender-App/static/js/main.1a7a49b7.chunk.js",
+    "main.js.map": "/ERC20-multiSender-App/static/js/main.1a7a49b7.chunk.js.map",
     "runtime-main.js": "/ERC20-multiSender-App/static/js/runtime-main.c4de3c41.js",
     "runtime-main.js.map": "/ERC20-multiSender-App/static/js/runtime-main.c4de3c41.js.map",
     "static/css/7.f1e0a3a8.chunk.css": "/ERC20-multiSender-App/static/css/7.f1e0a3a8.chunk.css",
@@ -260,6 +260,6 @@
     "static/css/7.f1e0a3a8.chunk.css",
     "static/js/7.ca040b29.chunk.js",
     "static/css/main.a617e044.chunk.css",
-    "static/js/main.41a62087.chunk.js"
+    "static/js/main.1a7a49b7.chunk.js"
   ]
 }
