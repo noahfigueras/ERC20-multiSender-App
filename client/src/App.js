@@ -48,22 +48,34 @@ function App() {
     async function updateState() {
         if(txState === 2) {
             //Send Tokens and reset
-            const addrs = recipients.map(x => x.address);
-            const Amounts = recipients.map(x => Number(x.amount));
-            const tx2 = await Contract.multiSender(addrs, Amounts, erc20);
-            await tx2.wait();
-            setTxState(0);
-            alert('Transaction Send Successfully');
+            try{
+                const addrs = recipients.map(x => x.address);
+                const Amounts = recipients.map(x => Number(x.amount));
+                const tx2 = await Contract.multiSender(addrs, Amounts, erc20);
+                await tx2.wait();
+                setTxState(0);
+                alert('Transaction Send Successfully');
+            } catch {
+                alert('There was a problem sending the transaction, Please try again!');
+            }
         } else if(txState === 0){
-            setTxState(1);
-            tokenContract = new ethers.Contract(erc20,tokenAbi,signer);
-            tokenDecimals = await tokenContract.decimals();
-            //Approve amounts
-            const amounts = recipients.map(x => Number(x.amount));
-            const tx1 = await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(), tokenDecimals));
-            await tx1.wait();
-            setTxState(2);
-            console.log('Transaction approved');
+            try{
+                //Set Token Contract 
+                tokenContract = new ethers.Contract(erc20,tokenAbi,signer);
+                tokenDecimals = await tokenContract.decimals();
+                setTxState(1);
+
+                //Approve amounts
+                const amounts = recipients.map(x => Number(x.amount));
+                const tx1 = await tokenContract.approve(contract.address, ethers.utils.parseUnits(amounts.reduce((a, b) => a + b, 0).toString(), tokenDecimals));
+                await tx1.wait();
+                setTxState(2);
+            } catch (err) {
+                const errString = String(err);
+                if(err.code === 4001){setTxState(0)}
+                else if(errString.indexOf('ENS') !== 0) {alert('Incorrect token address')}
+                    //alert('Transaction not approved: Make sure all the values in the recipient file are correct');
+            }
         }
     }
 
@@ -75,6 +87,7 @@ function App() {
             <p>
                 Send any ERC20 token to multiple users now
             </p>
+            <p>Only working on KOVAN network</p>
 
             <div style={{display:'flex'}}>
                 <div className='statusBar' style={{padding:'10px'}}>
